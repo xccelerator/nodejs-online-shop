@@ -20,7 +20,7 @@ async function findItem(name, price){
     return item
 }
 
-async function createUser(username, password){
+async function createUser(username, password, role){
     const users = await check_if_user_exist(username)
 
     if(users.length){
@@ -29,16 +29,17 @@ async function createUser(username, password){
 
     const hashPassword = await bcrypt.hash(password, 7)
 
-    await User.create({
+    const user = await User.create({
         username : username,
-        password :  hashPassword 
+        password :  hashPassword,
+        role : role
     }).catch((err) => {
         if(err) {
-            throw new Error('Error')
+            throw new Error('Error222')
         }
     })
 
-    return true
+    return user 
 }
 
 async function loginUser(username, password){
@@ -53,7 +54,7 @@ async function loginUser(username, password){
         throw new Error('Incorect password!')
     }
 
-    return true
+    return users
 }
 
 async function addItem(name, price){
