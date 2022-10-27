@@ -1,6 +1,7 @@
 require('../models')
 require('mysql2')
-const { User, Product } = require('../models')
+const { Op } = require('sequelize')
+const { User, Product, Brand } = require('../models')
 const bcrypt = require('bcrypt')
 
 async function check_if_user_exist(username){
@@ -57,10 +58,11 @@ async function loginUser(username, password){
     return users
 }
 
-async function addItem(name, price){
+async function addItem(name, price, brand){
     await Product.create({
         denumire : name,
-        cost : price
+        cost : price,
+        brandName : brand
     }).catch((err) => {
         if(err){
             throw new Error('Error')
@@ -84,10 +86,50 @@ async function updatePrice(name, oldPrice, newPrice){
     }
 }
 
+async function searchBy(minPrice, maxPrice){
+    try {
+        if(minPrice > maxPrice) {
+            throw new Error('Min price must be higher than Max Price') 
+        }
+
+        const products = await Product.findAll({ where : {
+            cost : {
+                [Op.between] : [minPrice, maxPrice]
+            }
+        } }) 
+
+        return products
+    } catch(err) {
+       throw new Error(err) 
+    }
+}
+
+async function createBrand(brandName){
+    const brands = await Brand.findAll({where : {
+        brandName : brandName
+    }})
+
+    if(brands.length){
+        throw new Error('Brand already exists!')
+    }
+
+    const brand = await Brand.create({
+        brandName :  brandName
+    }).catch((err) => {
+        if(err) {
+            throw new Error('Error')
+        }
+    })
+
+    return brand  
+}
+
 module.exports = {
     createUser,
     loginUser,
     addItem,
     findItem,
-    updatePrice
+    updatePrice,
+    searchBy,
+    createBrand
 }

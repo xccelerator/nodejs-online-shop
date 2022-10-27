@@ -20,7 +20,18 @@ module.exports = (sequelize, DataTypes) => {
                 notEmpty : true
             }
         },
+
+        brandName : {
+            type : DataTypes.STRING,
+        }
     })
+
+    Product.associate = (models) => {
+        Product.belongsTo(models.Brand, {
+            foreignKey: 'brandId',
+            targetKey : 'brandName'
+        });
+    }
 
     return Product
 }

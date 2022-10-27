@@ -45,12 +45,7 @@ async function loginPost(req, res, next){
 }
 
 
-function secretGet(req,res){
-   res.send('Secret page')
-}
-
 module.exports = {
     registerPost,
     loginPost,
-    secretGet
 } 

@@ -1,10 +1,11 @@
-const { addItem, findItem, updatePrice } = require('./service')
+const brand = require('../models/brand')
+const { addItem, findItem, updatePrice, searchBy, createBrand } = require('./service')
 
 async function addPost(req, res, next){
-    const {name, price} = req.body
+    const {name, price, brand} = req.body
 
     try{
-        const item = await addItem(name, price)
+        const item = await addItem(name, price, brand)
 
         if(item){
             return res.json({message : 'Item was added!'})
@@ -41,8 +42,39 @@ async function updatePost(req, res, next){
 
 }
 
+async function searchPost(req,res,next){
+    const { minPrice, maxPrice } = req.body
+
+    try {
+        const products = await searchBy(minPrice, maxPrice) 
+
+        return res.json(products)
+    } catch (err) {
+        return res.json({message : err.message})
+    }
+}
+
+async function addbrandPost(req,res,next){
+    const { brandName } = req.body
+
+    try {
+        
+        const brand = await createBrand(brandName)
+
+        if(brand){
+            return res.json({message : "Brand was created succesfully!"})
+        }
+
+        return res.json("Error")
+    } catch (err) {
+       return res.json({message : err.message}) 
+    }
+}
+
 module.exports = {
    addPost,
    deletePost,
-   updatePost
+   updatePost,
+   searchPost,
+   addbrandPost
 }

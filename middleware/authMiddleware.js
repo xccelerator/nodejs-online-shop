@@ -31,7 +31,7 @@ function checkAuth(req, res, next){
     }
 }
 
-function checkAdmin(role){
+function checkRole(role){
     return function (req,res,next){
         const token = checkToken(req.headers.authorization)
 
@@ -56,5 +56,5 @@ function checkAdmin(role){
 
 module.exports = {
    checkAuth,
-   checkAdmin
+   checkRole
 }
