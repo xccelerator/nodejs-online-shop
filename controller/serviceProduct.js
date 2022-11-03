@@ -1,9 +1,9 @@
 require('mysql2')
-const { Product } = require('../models')
+const { ProductInfo, Product } = require('../models')
 
 //async function addProduct(name, price, brandId, img){
 async function addProduct(name, price, brandId){
-    const prod= await Product.create({
+    const product = await Product.create({
         name : name,
         price : price,
         BrandId : brandId,
@@ -14,7 +14,7 @@ async function addProduct(name, price, brandId){
         }
     })
 
-    return prod  
+    return product  
 }
 
 async function findProduct(name){
@@ -37,13 +37,14 @@ async function updateProductPrice(name, newPrice){
     }
 }
 
-function createDescription(detail){
+function createDescription(detail, productId){
     ProductInfo.create({
         title : detail.title,
         description : detail.description,
-        ProductId : detail.productId,
+        ProductId : productId,
     })
 }
+
 
 module.exports = {
     addProduct,

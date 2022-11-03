@@ -3,7 +3,7 @@ const { Brand } = require('../models')
 
 async function createBrand(name){
     const brand = await Brand.create({
-        brandName : name,
+        name : name,
     }).catch((err) => {
         if(err){
             throw new Error('Error')
@@ -15,7 +15,7 @@ async function createBrand(name){
 
 async function findBrand(name){
     const brand = await Brand.findAll({ where : {
-        brandName : name
+        name : name
     } })
 
     return brand
@@ -26,7 +26,7 @@ async function updateBrandName(oldName, newName){
         const brand = await findBrand(oldName)
 
         await brand[0].update({
-            brandName : newName,
+            name : newName,
         })
 
         return true

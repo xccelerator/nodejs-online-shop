@@ -1,5 +1,7 @@
-const { addProduct, findProduct, updateProductPrice} = require('./serviceProduct')
+const { addProduct, findProduct, updateProductPrice, createDescription } = require('./serviceProduct')
 const { findBrand } = require('./serviceBrand')
+
+const { Product} = require('../models')
 const path = require('path')
 const uuid = require('uuid')
 
@@ -15,28 +17,31 @@ async function createProduct(req, res, next){
         brandId = brandId[0].dataValues.id
 
         const product = await addProduct(name, price, brandId)
+        const productId = product.dataValues.id
 
         if(detailList){
             detailList.forEach(detail=> {
-                createInfo(detail)
+                createDescription(detail, productId)
             })
         }
 
         if(product){
             return res.json({message: 'Product was added!'})
         }
+
+        return res.json({message: 'Error'})
     } catch(err){
         return res.json({message: err.message})
     }
 }
 
 async function deleteProduct(req, res, next){
-    const { name, price } = req.body
+    const { name } = req.body
 
     try{
-        const item = await findProduct(name, price)
+        const product = await findProduct(name)
 
-        await item.destroy()
+        await product[0].destroy()
 
         return res.json({message : 'Item was deleted!'})
     }catch(err){
@@ -45,20 +50,31 @@ async function deleteProduct(req, res, next){
 }
 
 async function updateProduct(req, res, next){
-    const { name, oldPrice, newPrice } = req.body
+    const { name, newPrice } = req.body
 
     try{
-        await updateProductPrice(name, oldPrice, newPrice) 
+        await updateProductPrice(name, newPrice) 
 
-        return res.json({message : 'Succesefully updated!'})
+        return res.json({message: 'Succesefully updated!'})
     } catch(err){
-        return res.json({message : err.message})
+        return res.json({message: err.message})
     }
 
+}
+
+async function getAll(req, res, next){
+    try{
+        const products = await Product.findAll()
+
+        return res.json({products})
+    }catch(err){
+        return res.json({message: err.message})
+    }
 }
 
 module.exports = {
     createProduct,
     deleteProduct,
     updateProduct,
+    getAll, 
 }

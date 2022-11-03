@@ -21,10 +21,12 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
 
+        /*
         img : {
             type : DataTypes.STRING,
             allowNull : false,
         },
+        */
     })
 
     Product.associate = (models) => {
@@ -33,7 +35,8 @@ module.exports = (sequelize, DataTypes) => {
 
     Product.associate = (models) => {
         Product.hasMany(models.ProductInfo, {
-            as : 'info'
+            onDelete : 'cascade',
+            as : 'info',
         })
     }
     return Product

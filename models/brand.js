@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
 
-        brandName : {
+        name : {
             type : DataTypes.STRING,
             unique : true
         }
