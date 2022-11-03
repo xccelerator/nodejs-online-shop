@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
                 notEmpty : true
             }
         },
-        cost : {
+        price : {
             type : DataTypes.INTEGER,
             allowNull : true,
         },
-        denumire : {
+        name : {
             type : DataTypes.STRING,
             allowNull : false,
             validate : {
@@ -21,17 +21,20 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
 
-        brandName : {
+        img : {
             type : DataTypes.STRING,
-        }
+            allowNull : false,
+        },
     })
 
     Product.associate = (models) => {
-        Product.belongsTo(models.Brand, {
-            foreignKey: 'brandId',
-            targetKey : 'brandName'
-        });
+        Product.belongsTo(models.Brand)
     }
 
+    Product.associate = (models) => {
+        Product.hasMany(models.ProductInfo, {
+            as : 'info'
+        })
+    }
     return Product
 }

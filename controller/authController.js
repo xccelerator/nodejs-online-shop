@@ -1,6 +1,6 @@
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
-const { createUser, loginUser } = require('./service')
+const { createUser, loginUser } = require('./serviceAuth')
 
 const createToken = (username, role) => {
     return jwt.sign({username, role}, process.env.JWT_SECRET_KEY, {
